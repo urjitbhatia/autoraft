@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net"
-	"net/http"
 	"os"
 	"time"
 
@@ -30,7 +29,6 @@ func init() {
 		With().
 		Timestamp().
 		Logger()
-	http.DefaultClient.Timeout = time.Second
 }
 
 type myFSM struct{}
@@ -111,17 +109,4 @@ func getRaft() *raft.Raft {
 	}
 
 	return rcluster
-}
-
-func listenHTTP() {
-	http.HandleFunc("/", hello)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
-	if err != nil {
-		log.Fatal().Err(err).Send()
-	}
-}
-
-func hello(w http.ResponseWriter, req *http.Request) {
-	msg := "hello from " + *id
-	w.Write([]byte(msg))
 }
